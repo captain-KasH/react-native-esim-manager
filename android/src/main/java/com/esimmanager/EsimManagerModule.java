@@ -56,19 +56,34 @@ public class EsimManagerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void isEsimSupported(Promise promise) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                TelephonyManager telephonyManager = (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
-                if (telephonyManager != null) {
-                    boolean supported = telephonyManager.isMultiSimSupported() != TelephonyManager.MULTISIM_NOT_SUPPORTED_BY_HARDWARE;
-                    promise.resolve(supported);
-                } else {
-                    promise.resolve(false);
-                }
-            } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                 promise.resolve(false);
+                return;
             }
+
+            EuiccManager euiccManager =
+                    (EuiccManager) reactContext.getSystemService(Context.EUICC_SERVICE);
+
+            if (euiccManager == null) {
+                promise.resolve(false);
+                return;
+            }
+
+            // 1️⃣ Hardware check
+            if (!euiccManager.isEnabled()) {
+                promise.resolve(false);
+                return;
+            }
+
+            // 2️⃣ Runtime capability verification (important!)
+            boolean hasEuiccFeature =
+                    reactContext.getPackageManager()
+                            .hasSystemFeature(PackageManager.FEATURE_TELEPHONY_EUICC);
+
+            promise.resolve(hasEuiccFeature);
+
         } catch (Exception e) {
-            promise.reject("ERROR", e.getMessage());
+            promise.reject("ESIM_ERROR", e.getMessage());
         }
     }
 
@@ -168,7 +183,7 @@ public class EsimManagerModule extends ReactContextBaseJavaModule {
                             clipboard.setPrimaryClip(clip);
                             
                             try {
-                                // Try direct eSIM installation intent first
+                                // First priority: Direct eSIM installation
                                 Intent intent = new Intent("android.telephony.euicc.action.PROVISION_EMBEDDED_SUBSCRIPTION");
                                 intent.putExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_DOWNLOADABLE_SUBSCRIPTION", subscription);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -176,16 +191,15 @@ public class EsimManagerModule extends ReactContextBaseJavaModule {
                                 promise.resolve(true);
                             } catch (Exception e1) {
                                 try {
-                                    // Try eSIM-specific settings page
+                                    // Second priority: eSIM-specific settings
                                     Intent intent = new Intent("android.settings.EUICC_SETTINGS");
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     currentActivity.startActivity(intent);
                                     promise.resolve(true);
                                 } catch (Exception e2) {
                                     try {
-                                        // Try SIM settings with add eSIM action
+                                        // Third priority: SIM manager settings
                                         Intent intent = new Intent("android.settings.SIM_SETTINGS");
-                                        intent.putExtra("android.provider.extra.SIM_STATE", "ADD_SIM");
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         currentActivity.startActivity(intent);
                                         promise.resolve(true);
