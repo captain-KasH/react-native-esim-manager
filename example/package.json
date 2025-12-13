@@ -1,6 +1,6 @@
 {
   "name": "e-sim-manager-example",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -15,7 +15,7 @@
     "@react-native/new-app-screen": "0.81.0",
     "react": "19.1.0",
     "react-native": "0.81.0",
-    "react-native-esim-manager": "^0.0.1",
+    "react-native-esim-manager": "file:..",
     "react-native-safe-area-context": "^5.5.2"
   },
   "devDependencies": {

@@ -1,0 +1,7 @@
+node_modules/
+lib/
+*.log
+.DS_Store
+*.tgz
+.vscode/
+.idea/

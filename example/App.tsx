@@ -17,7 +17,8 @@ import ReactNativeEsimManager, { EsimInfo } from 'react-native-esim-manager';
 
 const App = () => {
   const [esimInfo, setEsimInfo] = useState<EsimInfo | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [buttonLoading, setButtonLoading] = useState<{[key: string]: boolean}>({});
   const [activationCode, setActivationCode] = useState('LPA:1$prod.smdp-plus.rsp.goog$3TD6-8L82-HUE1-LVN6');
   
   const testCodes = [
@@ -37,47 +38,61 @@ const App = () => {
     try {
       const granted = await ReactNativeEsimManager.requestPermissions();
       if (granted) {
-        checkEsimStatus();
+        checkEsimStatus(true);
       } else {
         Alert.alert('Permission Denied', 'Phone state permission is required for eSIM detection');
+        setInitialLoading(false);
       }
     } catch (err) {
       console.warn(err);
-      checkEsimStatus(); // Try anyway on iOS
+      checkEsimStatus(true); // Try anyway on iOS
     }
   };
 
-  const checkEsimStatus = async () => {
-    setLoading(true);
+  const setButtonLoadingState = (key: string, loading: boolean) => {
+    setButtonLoading(prev => ({ ...prev, [key]: loading }));
+  };
+
+  const checkEsimStatus = async (isInitial = false) => {
+    if (isInitial) setInitialLoading(true);
+    else setButtonLoadingState('refresh', true);
     try {
       const info = await ReactNativeEsimManager.getEsimInfo();
       setEsimInfo(info);
     } catch (error) {
       Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
     } finally {
-      setLoading(false);
+      if (isInitial) setInitialLoading(false);
+      else setButtonLoadingState('refresh', false);
     }
   };
 
   const checkSupport = async () => {
+    setButtonLoadingState('support', true);
     try {
       const supported = await ReactNativeEsimManager.isEsimSupported();
       Alert.alert('eSIM Support', supported ? 'Supported' : 'Not Supported');
     } catch (error) {
       Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      setButtonLoadingState('support', false);
     }
   };
 
   const checkEnabled = async () => {
+    setButtonLoadingState('enabled', true);
     try {
       const enabled = await ReactNativeEsimManager.isEsimEnabled();
       Alert.alert('eSIM Status', enabled ? 'Enabled' : 'Disabled');
     } catch (error) {
       Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      setButtonLoadingState('enabled', false);
     }
   };
 
   const installEsim = async () => {
+    setButtonLoadingState('install', true);
     try {
       const success = await ReactNativeEsimManager.installEsimProfile({
         activationCode: activationCode
@@ -91,29 +106,54 @@ const App = () => {
             : 'eSIM installed successfully!'
         );
         // Refresh info after installation
-        setTimeout(checkEsimStatus, 2000);
+        setTimeout(() => checkEsimStatus(), 2000);
       } else {
         Alert.alert('Installation Failed', 'Installation returned false.');
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       Alert.alert('Installation Error', `Failed to install eSIM: ${errorMessage}`);
+    } finally {
+      setButtonLoadingState('install', false);
     }
   };
 
   const getCellularPlans = async () => {
+    setButtonLoadingState('plans', true);
     try {
       const cellularPlans = await ReactNativeEsimManager.getCellularPlans();
       setPlans(cellularPlans);
       Alert.alert('Cellular Plans', `Found ${cellularPlans.length} plans`);
     } catch (error) {
       Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      setButtonLoadingState('plans', false);
     }
   };
 
-  const Button = ({ title, onPress, style }: { title: string; onPress: () => void; style?: ViewStyle }) => (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-      <Text style={styles.buttonText}>{title}</Text>
+  const SkeletonLoader = () => (
+    <View style={styles.skeletonContainer}>
+      <View style={styles.skeletonTitle} />
+      <View style={styles.skeletonLine} />
+      <View style={styles.skeletonLine} />
+      <View style={styles.skeletonLineShort} />
+    </View>
+  );
+
+  const Button = ({ title, onPress, style, loadingKey }: { 
+    title: string; 
+    onPress: () => void; 
+    style?: ViewStyle;
+    loadingKey?: string;
+  }) => (
+    <TouchableOpacity 
+      style={[styles.button, style, (loadingKey && buttonLoading[loadingKey]) && styles.buttonDisabled]} 
+      onPress={onPress}
+      disabled={loadingKey ? buttonLoading[loadingKey] : false}
+    >
+      <Text style={styles.buttonText}>
+        {(loadingKey && buttonLoading[loadingKey]) ? 'Loading...' : title}
+      </Text>
     </TouchableOpacity>
   );
 
@@ -124,8 +164,8 @@ const App = () => {
         
         <Text style={styles.title}>eSIM Manager Example</Text>
         
-        {loading ? (
-          <Text style={styles.loading}>Loading...</Text>
+        {initialLoading ? (
+          <SkeletonLoader />
         ) : esimInfo ? (
           <View style={styles.infoContainer}>
             <Text style={styles.infoTitle}>eSIM Information:</Text>
@@ -138,10 +178,10 @@ const App = () => {
         ) : null}
 
         <View style={styles.buttonContainer}>
-          <Button title="Refresh eSIM Info" onPress={checkEsimStatus} />
-          <Button title="Check Support" onPress={checkSupport} />
-          <Button title="Check Enabled" onPress={checkEnabled} />
-          <Button title="Get Cellular Plans" onPress={getCellularPlans} />
+          <Button title="Refresh eSIM Info" onPress={() => checkEsimStatus()} loadingKey="refresh" />
+          <Button title="Check Support" onPress={checkSupport} loadingKey="support" />
+          <Button title="Check Enabled" onPress={checkEnabled} loadingKey="enabled" />
+          <Button title="Get Cellular Plans" onPress={getCellularPlans} loadingKey="plans" />
         </View>
 
         {plans.length > 0 && (
@@ -172,7 +212,7 @@ const App = () => {
             placeholder="Enter activation code"
             multiline
           />
-          <Button title="Install eSIM Profile" onPress={installEsim} style={styles.installButton} />
+          <Button title="Install eSIM Profile" onPress={installEsim} style={styles.installButton} loadingKey="install" />
           
           <View style={styles.testCodesContainer}>
             <Text style={styles.testCodesTitle}>Test Activation Codes:</Text>
@@ -290,33 +330,67 @@ const styles = StyleSheet.create({
   installButton: {
     backgroundColor: '#34C759',
   },
-  plansContainer: {
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  skeletonContainer: {
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 12,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    marginBottom: 10,
+  },
+  skeletonTitle: {
+    height: 20,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    marginBottom: 15,
+    width: '60%',
+  },
+  skeletonLine: {
+    height: 16,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    marginBottom: 8,
+    width: '100%',
+  },
+  skeletonLineShort: {
+    height: 16,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    marginBottom: 8,
+    width: '70%',
+  },
+  plansContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   planItem: {
     backgroundColor: '#f8f9fa',
-    padding: 12,
+    padding: 15,
     borderRadius: 8,
     marginBottom: 10,
+    borderLeftWidth: 4,
+    borderLeftColor: '#007AFF',
   },
   planText: {
     fontSize: 14,
-    color: '#495057',
-    marginBottom: 2,
+    marginBottom: 4,
+    color: '#333',
   },
   testCodesContainer: {
-    marginTop: 15,
-    paddingTop: 15,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
+    marginTop: 20,
   },
   testCodesTitle: {
     fontSize: 16,
@@ -325,16 +399,15 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   testCodeButton: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f0f0',
     padding: 10,
     borderRadius: 6,
     marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
   },
   testCodeText: {
     fontSize: 14,
-    color: '#495057',
+    color: '#007AFF',
+    fontWeight: '500',
   },
 });
 
