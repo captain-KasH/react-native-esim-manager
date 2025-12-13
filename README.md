@@ -1,4 +1,21 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# eSIM Manager Example App
+
+This is an example React Native app demonstrating the usage of `react-native-esim-manager` package.
+
+## Features
+
+- Check eSIM support and status
+- Get detailed eSIM information
+- Install eSIM profiles using activation codes
+- View cellular plans on the device
+- Test with sample activation codes
+
+## Prerequisites
+
+- React Native development environment set up
+- iOS 12.0+ device or simulator (for eSIM installation testing)
+- Android 9.0+ (API 28) device or emulator (for full eSIM support)
+- Physical device recommended for real eSIM testing
 
 # Getting Started
 
@@ -60,38 +77,60 @@ yarn ios
 
 If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## Step 3: Test eSIM functionality
 
-## Step 3: Modify your app
+Once the app is running, you can:
 
-Now that you have successfully run the app, let's make changes!
+1. **Check eSIM Support**: Tap "Check Support" to see if your device supports eSIM
+2. **View eSIM Info**: The app automatically loads eSIM information on startup
+3. **Test Installation**: Use the provided test activation codes to test the installation flow
+4. **View Cellular Plans**: Tap "Get Cellular Plans" to see active cellular subscriptions
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### Test Activation Codes
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+The app includes several test activation codes you can use:
+- Google Test: `LPA:1$prod.smdp-plus.rsp.goog$3TD6-8L82-HUE1-LVN6`
+- GSMA Test: `LPA:1$lpa.ds.gsma.com$GSMA-TEST-PROFILE`
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+**Note**: Test codes may not actually install profiles but demonstrate the installation flow.
 
-## Congratulations! :tada:
+## Platform-Specific Notes
 
-You've successfully run and modified your React Native App. :partying_face:
+### iOS
+- Requires iOS 12.0+ for eSIM installation
+- Test on physical device for best results
+- Installation shows native iOS eSIM dialog
 
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+### Android
+- Requires API 28+ for full eSIM support
+- Installation opens system settings
+- Activation code is copied to clipboard automatically
+- Grant phone state permission when prompted
 
 # Troubleshooting
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## Common Issues
 
-# Learn More
+1. **"eSIM not supported" on simulator**
+   - Use a physical device for eSIM testing
+   - iOS Simulator doesn't support eSIM functionality
 
-To learn more about React Native, take a look at the following resources:
+2. **Permission denied on Android**
+   - Grant "Phone" permission when prompted
+   - Check that READ_PHONE_STATE permission is in AndroidManifest.xml
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+3. **Installation not working**
+   - Ensure device supports eSIM (iOS 12.0+, Android API 28+)
+   - Use valid activation codes (starting with "LPA:1$")
+   - On Android, paste the activation code from clipboard in opened settings
+
+4. **No carrier information shown**
+   - Ensure eSIM profile is properly activated
+   - Check device has active cellular connection
+
+## Learn More
+
+- [react-native-esim-manager Documentation](../README.md)
+- [React Native eSIM Guide](https://reactnative.dev)
+- [iOS eSIM Programming Guide](https://developer.apple.com/documentation/coretelephone)
+- [Android eSIM API Documentation](https://developer.android.com/reference/android/telephony/euicc/EuiccManager)
