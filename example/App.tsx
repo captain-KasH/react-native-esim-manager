@@ -14,19 +14,22 @@ import {
 } from 'react-native';
 import ReactNativeEsimManager, { EsimInfo } from 'react-native-esim-manager';
 
-
 const App = () => {
   const [esimInfo, setEsimInfo] = useState<EsimInfo | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [buttonLoading, setButtonLoading] = useState<{[key: string]: boolean}>({});
-  const [activationCode, setActivationCode] = useState('LPA:1$prod.smdp-plus.rsp.goog$3TD6-8L82-HUE1-LVN6');
-  
+  const [buttonLoading, setButtonLoading] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [activationCode, setActivationCode] = useState(
+    'LPA:1$prod.smdp-plus.rsp.goog$3TD6-8L82-HUE1-LVN6',
+  );
+
   const testCodes = [
     'LPA:1$prod.smdp-plus.rsp.goog$3TD6-8L82-HUE1-LVN6', // Google Test
     'LPA:1$rsp.truphone.com$TRUPHONE_TEST_CODE', // Truphone Test
     'LPA:1$consumer.smdp-plus.com$TEST123456789', // Generic Test
     'LPA:1$esim-man.com$TEST-ESIM-CODE-001', // eSIM Man Test
-    'LPA:1$lpa.ds.gsma.com$GSMA-TEST-PROFILE' // GSMA Test
+    'LPA:1$lpa.ds.gsma.com$GSMA-TEST-PROFILE', // GSMA Test
   ];
   const [plans, setPlans] = useState<any[]>([]);
 
@@ -40,7 +43,10 @@ const App = () => {
       if (granted) {
         checkEsimStatus(true);
       } else {
-        Alert.alert('Permission Denied', 'Phone state permission is required for eSIM detection');
+        Alert.alert(
+          'Permission Denied',
+          'Phone state permission is required for eSIM detection',
+        );
         setInitialLoading(false);
       }
     } catch (err) {
@@ -60,7 +66,10 @@ const App = () => {
       const info = await ReactNativeEsimManager.getEsimInfo();
       setEsimInfo(info);
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
     } finally {
       if (isInitial) setInitialLoading(false);
       else setButtonLoadingState('refresh', false);
@@ -73,7 +82,10 @@ const App = () => {
       const supported = await ReactNativeEsimManager.isEsimSupported();
       Alert.alert('eSIM Support', supported ? 'Supported' : 'Not Supported');
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
     } finally {
       setButtonLoadingState('support', false);
     }
@@ -85,7 +97,10 @@ const App = () => {
       const enabled = await ReactNativeEsimManager.isEsimEnabled();
       Alert.alert('eSIM Status', enabled ? 'Enabled' : 'Disabled');
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
     } finally {
       setButtonLoadingState('enabled', false);
     }
@@ -95,15 +110,15 @@ const App = () => {
     setButtonLoadingState('install', true);
     try {
       const success = await ReactNativeEsimManager.installEsimProfile({
-        activationCode: activationCode
+        activationCode: activationCode,
       });
-      
+
       if (success) {
         Alert.alert(
-          'Installation Result', 
-          Platform.OS === 'android' 
+          'Installation Result',
+          Platform.OS === 'android'
             ? 'Function returned success. On Android, this may have opened device settings.'
-            : 'eSIM installed successfully!'
+            : 'eSIM installed successfully!',
         );
         // Refresh info after installation
         setTimeout(() => checkEsimStatus(), 2000);
@@ -111,8 +126,12 @@ const App = () => {
         Alert.alert('Installation Failed', 'Installation returned false.');
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      Alert.alert('Installation Error', `Failed to install eSIM: ${errorMessage}`);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error occurred';
+      Alert.alert(
+        'Installation Error',
+        `Failed to install eSIM: ${errorMessage}`,
+      );
     } finally {
       setButtonLoadingState('install', false);
     }
@@ -125,7 +144,10 @@ const App = () => {
       setPlans(cellularPlans);
       Alert.alert('Cellular Plans', `Found ${cellularPlans.length} plans`);
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Unknown error');
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
     } finally {
       setButtonLoadingState('plans', false);
     }
@@ -140,19 +162,28 @@ const App = () => {
     </View>
   );
 
-  const Button = ({ title, onPress, style, loadingKey }: { 
-    title: string; 
-    onPress: () => void; 
+  const Button = ({
+    title,
+    onPress,
+    style,
+    loadingKey,
+  }: {
+    title: string;
+    onPress: () => void;
     style?: ViewStyle;
     loadingKey?: string;
   }) => (
-    <TouchableOpacity 
-      style={[styles.button, style, (loadingKey && buttonLoading[loadingKey]) && styles.buttonDisabled]} 
+    <TouchableOpacity
+      style={[
+        styles.button,
+        style,
+        loadingKey && buttonLoading[loadingKey] && styles.buttonDisabled,
+      ]}
       onPress={onPress}
       disabled={loadingKey ? buttonLoading[loadingKey] : false}
     >
       <Text style={styles.buttonText}>
-        {(loadingKey && buttonLoading[loadingKey]) ? 'Loading...' : title}
+        {loadingKey && buttonLoading[loadingKey] ? 'Loading...' : title}
       </Text>
     </TouchableOpacity>
   );
@@ -160,40 +191,84 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
         <Text style={styles.title}>eSIM Manager Example</Text>
-        
+
         {initialLoading ? (
           <SkeletonLoader />
         ) : esimInfo ? (
           <View style={styles.infoContainer}>
             <Text style={styles.infoTitle}>eSIM Information:</Text>
-            <Text style={styles.infoText}>Supported: {esimInfo.isEsimSupported ? '✅' : '❌'}</Text>
-            <Text style={styles.infoText}>Enabled: {esimInfo.isEsimEnabled ? '✅' : '❌'}</Text>
-            {esimInfo.carrierName && <Text style={styles.infoText}>Carrier: {esimInfo.carrierName}</Text>}
-            {esimInfo.mobileCountryCode && <Text style={styles.infoText}>MCC: {esimInfo.mobileCountryCode}</Text>}
-            {esimInfo.mobileNetworkCode && <Text style={styles.infoText}>MNC: {esimInfo.mobileNetworkCode}</Text>}
+            <Text style={styles.infoText}>
+              Supported: {esimInfo.isEsimSupported ? '✅' : '❌'}
+            </Text>
+            <Text style={styles.infoText}>
+              Enabled: {esimInfo.isEsimEnabled ? '✅' : '❌'}
+            </Text>
+            {esimInfo.carrierName && (
+              <Text style={styles.infoText}>
+                Carrier: {esimInfo.carrierName}
+              </Text>
+            )}
+            {esimInfo.mobileCountryCode && (
+              <Text style={styles.infoText}>
+                MCC: {esimInfo.mobileCountryCode}
+              </Text>
+            )}
+            {esimInfo.mobileNetworkCode && (
+              <Text style={styles.infoText}>
+                MNC: {esimInfo.mobileNetworkCode}
+              </Text>
+            )}
           </View>
         ) : null}
 
         <View style={styles.buttonContainer}>
-          <Button title="Refresh eSIM Info" onPress={() => checkEsimStatus()} loadingKey="refresh" />
-          <Button title="Check Support" onPress={checkSupport} loadingKey="support" />
-          <Button title="Check Enabled" onPress={checkEnabled} loadingKey="enabled" />
-          <Button title="Get Cellular Plans" onPress={getCellularPlans} loadingKey="plans" />
+          <Button
+            title="Refresh eSIM Info"
+            onPress={() => checkEsimStatus()}
+            loadingKey="refresh"
+          />
+          <Button
+            title="Check Support"
+            onPress={checkSupport}
+            loadingKey="support"
+          />
+          <Button
+            title="Check Enabled"
+            onPress={checkEnabled}
+            loadingKey="enabled"
+          />
+          <Button
+            title="Get Cellular Plans"
+            onPress={getCellularPlans}
+            loadingKey="plans"
+          />
         </View>
 
         {plans.length > 0 && (
           <View style={styles.plansContainer}>
-            <Text style={styles.sectionTitle}>Cellular Plans ({plans.length})</Text>
+            <Text style={styles.sectionTitle}>
+              Cellular Plans ({plans.length})
+            </Text>
             {plans.map((plan, index) => (
               <View key={index} style={styles.planItem}>
-                <Text style={styles.planText}>Carrier: {plan.carrierName || 'Unknown'}</Text>
-                <Text style={styles.planText}>MCC: {plan.mobileCountryCode || 'N/A'}</Text>
-                <Text style={styles.planText}>MNC: {plan.mobileNetworkCode || 'N/A'}</Text>
+                <Text style={styles.planText}>
+                  Carrier: {plan.carrierName || 'Unknown'}
+                </Text>
+                <Text style={styles.planText}>
+                  MCC: {plan.mobileCountryCode || 'N/A'}
+                </Text>
+                <Text style={styles.planText}>
+                  MNC: {plan.mobileNetworkCode || 'N/A'}
+                </Text>
                 {plan.isEmbedded !== undefined && (
-                  <Text style={styles.planText}>eSIM: {plan.isEmbedded ? '✅' : '❌'}</Text>
+                  <Text style={styles.planText}>
+                    eSIM: {plan.isEmbedded ? '✅' : '❌'}
+                  </Text>
                 )}
               </View>
             ))}
@@ -203,7 +278,9 @@ const App = () => {
         <View style={styles.installSection}>
           <Text style={styles.sectionTitle}>Install eSIM Profile</Text>
           {Platform.OS === 'android' && (
-            <Text style={styles.androidNote}>On Android: Opens system eSIM settings</Text>
+            <Text style={styles.androidNote}>
+              On Android: Opens system eSIM settings
+            </Text>
           )}
           <TextInput
             style={styles.input}
@@ -212,22 +289,28 @@ const App = () => {
             placeholder="Enter activation code"
             multiline
           />
-          <Button title="Install eSIM Profile" onPress={installEsim} style={styles.installButton} loadingKey="install" />
-          
+          <Button
+            title="Install eSIM Profile"
+            onPress={installEsim}
+            style={styles.installButton}
+            loadingKey="install"
+          />
+
           <View style={styles.testCodesContainer}>
             <Text style={styles.testCodesTitle}>Test Activation Codes:</Text>
             {testCodes.map((code, index) => (
-              <TouchableOpacity 
-                key={index} 
+              <TouchableOpacity
+                key={index}
                 style={styles.testCodeButton}
                 onPress={() => setActivationCode(code)}
               >
-                <Text style={styles.testCodeText}>{code.split('$')[1] || 'Test Code'}</Text>
+                <Text style={styles.testCodeText}>
+                  {code.split('$')[1] || 'Test Code'}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
-
       </ScrollView>
     </SafeAreaView>
   );
