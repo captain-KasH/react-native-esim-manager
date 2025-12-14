@@ -3,6 +3,7 @@
 ## GitHub Repository Settings
 
 ### Main Branch Protection
+
 ```
 Branch: main
 ☑️ Restrict pushes that create files larger than 100MB
@@ -19,6 +20,7 @@ Branch: main
 ```
 
 ### Develop Branch Protection
+
 ```
 Branch: develop
 ☑️ Require status checks to pass
@@ -27,6 +29,7 @@ Branch: develop
 ```
 
 ## Semantic Release Tags
+
 - `v1.0.0` - Major release
 - `v1.0.0-rc.1` - Release candidate
 - `v1.0.0-beta.1` - Beta release
