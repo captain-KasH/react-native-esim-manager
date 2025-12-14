@@ -2,7 +2,10 @@ import { NativeModules, Platform } from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-esim-manager' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'cd ios && pod install'\n", default: '' }) +
+  Platform.select({
+    ios: "- You have run 'cd ios && pod install'\n",
+    default: '',
+  }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
@@ -52,11 +55,12 @@ export class ReactNativeEsimManager {
           PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
           {
             title: 'Phone State Permission',
-            message: 'This app needs access to phone state to detect eSIM information',
+            message:
+              'This app needs access to phone state to detect eSIM information',
             buttonNeutral: 'Ask Me Later',
             buttonNegative: 'Cancel',
             buttonPositive: 'OK',
-          },
+          }
         );
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
@@ -94,7 +98,9 @@ export class ReactNativeEsimManager {
    * Android: Opens system eSIM settings
    * @param data eSIM installation data
    */
-  static async installEsimProfile(data: EsimInstallationData): Promise<boolean> {
+  static async installEsimProfile(
+    data: EsimInstallationData
+  ): Promise<boolean> {
     return EsimManager.installEsimProfile(data);
   }
 
