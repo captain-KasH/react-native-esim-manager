@@ -18,15 +18,18 @@ If you discover a security vulnerability, please report it privately:
 ## Security Considerations
 
 ### Permissions
+
 - Android: READ_PHONE_STATE permission required
 - iOS: No additional permissions needed
 
 ### Data Handling
+
 - No sensitive data is stored locally
 - eSIM activation codes should be handled securely
 - ICCID and carrier information may be sensitive
 
 ### Best Practices
+
 - Validate activation codes before installation
 - Handle permission denials gracefully
 - Use secure communication channels for eSIM provisioning
