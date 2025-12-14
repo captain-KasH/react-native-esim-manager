@@ -239,6 +239,9 @@ npm run prepack
 
 # Local CI simulation
 npm run ci:local
+
+# Local GitHub Actions testing (requires Act)
+npm run ci:act
 ```
 
 ### Testing
@@ -251,6 +254,21 @@ npm run test:coverage
 
 # Watch mode for development
 npm run test:watch
+```
+
+### Local Testing Tools
+
+```bash
+# Test GitHub Actions locally (requires Act)
+brew install act
+npm run ci:act
+
+# Complete pre-push validation
+npm run pre-push
+
+# Docker-based testing
+docker build -f Dockerfile.test -t esim-manager-test .
+docker run --rm esim-manager-test
 ```
 
 ### Quality Assurance
@@ -266,7 +284,7 @@ npm run test:watch
 
 ### Automated Workflows
 
-- **[CI Workflow](.github/workflows/ci.yml)**: Runs tests on multiple Node.js versions
+- **[CI Workflow](.github/workflows/ci.yml)**: Runs tests on Node.js 18.x with comprehensive validation
 - **[Pre-release Workflow](.github/workflows/pre-release.yml)**: Creates draft releases for release branches
 - **[Release Workflow](.github/workflows/release.yml)**: Automated NPM publishing on version tags
 

@@ -58,6 +58,11 @@ example/android/app/.cxx/
 example/android/local.properties
 example/android/app/debug.keystore
 
+# Android build files
+android/build/
+android/.gradle/
+android/local.properties
+
 # iOS specific
 example/ios/Pods/
 example/ios/.xcode.env.local
