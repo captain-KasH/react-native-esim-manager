@@ -89,6 +89,7 @@ Once the app is running, you can:
 ### Test Activation Codes
 
 The app includes several test activation codes you can use:
+
 - Google Test: `LPA:1$prod.smdp-plus.rsp.goog$3TD6-8L82-HUE1-LVN6`
 - GSMA Test: `LPA:1$lpa.ds.gsma.com$GSMA-TEST-PROFILE`
 
@@ -97,11 +98,13 @@ The app includes several test activation codes you can use:
 ## Platform-Specific Notes
 
 ### iOS
+
 - Requires iOS 12.0+ for eSIM installation
 - Test on physical device for best results
 - Installation shows native iOS eSIM dialog
 
 ### Android
+
 - Requires API 28+ for full eSIM support
 - Installation opens system settings
 - Activation code is copied to clipboard automatically
@@ -112,14 +115,17 @@ The app includes several test activation codes you can use:
 ## Common Issues
 
 1. **"eSIM not supported" on simulator**
+
    - Use a physical device for eSIM testing
    - iOS Simulator doesn't support eSIM functionality
 
 2. **Permission denied on Android**
+
    - Grant "Phone" permission when prompted
    - Check that READ_PHONE_STATE permission is in AndroidManifest.xml
 
 3. **Installation not working**
+
    - Ensure device supports eSIM (iOS 12.0+, Android API 28+)
    - Use valid activation codes (starting with "LPA:1$")
    - On Android, paste the activation code from clipboard in opened settings

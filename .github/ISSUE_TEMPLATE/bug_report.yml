@@ -1,0 +1,72 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  
+  - type: input
+    id: version
+    attributes:
+      label: Package Version
+      description: What version of react-native-esim-manager are you using?
+      placeholder: e.g. 0.0.3
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Which platform is affected?
+      options:
+        - iOS
+        - Android
+        - Both
+    validations:
+      required: true
+  
+  - type: input
+    id: rn-version
+    attributes:
+      label: React Native Version
+      placeholder: e.g. 0.72.0
+    validations:
+      required: true
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+    validations:
+      required: true
+  
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Call method '...'
+        2. See error
+    validations:
+      required: true
+  
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+    validations:
+      required: true
+  
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs
+      description: Any relevant error messages or logs
+      render: shell
