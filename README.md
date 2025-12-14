@@ -11,6 +11,7 @@ React Native package for eSIM detection and management on iOS and Android device
 
 - **[API Reference](#api-reference)** - Complete method documentation
 - **[Contributing Guide](CONTRIBUTING.md)** - Development workflow and guidelines
+- **[Release Process](RELEASE_PROCESS.md)** - Step-by-step release guide
 - **[Security Policy](SECURITY.md)** - Vulnerability reporting and security practices
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards and behavior
 - **[Changelog](CHANGELOG.md)** - Version history and changes
