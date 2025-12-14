@@ -1,9 +1,6 @@
 module.exports = {
   root: true,
-  extends: [
-    '@react-native-community',
-    'prettier',
-  ],
+  extends: ['@react-native-community', 'prettier'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
@@ -24,12 +21,17 @@ module.exports = {
       },
     },
     {
-      files: ['**/__tests__/**/*', '**/*.test.*'],
+      files: ['**/__tests__/**/*', '**/*.test.*', 'jest.setup.js'],
       env: {
         jest: true,
+        node: true,
+      },
+      globals: {
+        jest: 'readonly',
       },
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
+        'no-undef': 'off',
       },
     },
   ],
