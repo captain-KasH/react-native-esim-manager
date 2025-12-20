@@ -5,11 +5,12 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:7.2.1"
+    classpath "com.android.tools.build:gradle:8.1.1"
   }
 }
 
 apply plugin: "com.android.library"
+apply plugin: "com.facebook.react"
 
 def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["EsimManager_" + name]
@@ -19,20 +20,46 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["EsimManager_" + name]).toInteger()
 }
 
+def isNewArchitectureEnabled() {
+  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
+}
+
 android {
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+  namespace "com.esimmanager"
 
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     versionCode 1
     versionName "1.0"
-    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", (findProperty("newArchEnabled") == "true").toString()
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    
+    if (isNewArchitectureEnabled()) {
+      externalNativeBuild {
+        cmake {
+          cppFlags "-O2 -frtti -fexceptions -Wall -Wno-unused-variable -fstack-protector-all"
+          abiFilters "x86", "x86_64", "arm64-v8a", "armeabi-v7a"
+          arguments "-DREACT_NATIVE_DIR=${rootProject.projectDir}/../node_modules/react-native"
+        }
+      }
+    }
+  }
+
+  if (isNewArchitectureEnabled()) {
+    // Disable C++ build for now
+    // externalNativeBuild {
+    //   cmake {
+    //     path "CMakeLists.txt"
+    //     version "3.18.1"
+    //   }
+    // }
   }
 
   buildTypes {
     release {
       minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
 
@@ -41,8 +68,21 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_21
-    targetCompatibility JavaVersion.VERSION_21
+    sourceCompatibility JavaVersion.VERSION_11
+    targetCompatibility JavaVersion.VERSION_11
+  }
+
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += [
+          "src/newarch/java",
+          "${project.buildDir}/generated/source/codegen/java"
+        ]
+      } else {
+        java.srcDirs += ["src/oldarch/java"]
+      }
+    }
   }
 }
 
@@ -118,4 +158,9 @@ repositories {
 
 dependencies {
   implementation "com.facebook.react:react-native:+"
+  
+  if (isNewArchitectureEnabled()) {
+    implementation "com.facebook.react:react-android"
+    implementation "com.facebook.react:hermes-android"
+  }
 }
