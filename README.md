@@ -189,6 +189,18 @@ All methods return promises and may throw errors. Common error codes:
 - `INSTALLATION_FAILED` - eSIM installation failed
 - `INSTALLATION_CANCELLED` - User cancelled installation (iOS)
 
+## 🐛 Known Issues
+
+### React Native 0.81.0 Compatibility
+
+If you encounter the error `react-refresh-runtime.development.js` not found, add the missing dependency:
+
+```bash
+npm install react-refresh@^0.14.0
+```
+
+This is a known issue with React Native 0.81.0 where the `react-refresh` package is not automatically included in the dependencies.
+
 ## 🛠️ Development
 
 ### Prerequisites
