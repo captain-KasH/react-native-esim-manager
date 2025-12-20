@@ -9,17 +9,13 @@ import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
-import com.esimmanager.EsimManagerPackage
 
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
       object : DefaultReactNativeHost(this) {
         override fun getPackages(): List<ReactPackage> =
-            PackageList(this).packages.apply {
-              // Add eSIM manager package
-              add(EsimManagerPackage())
-            }
+            PackageList(this).packages
 
         override fun getJSMainModuleName(): String = "index"
 
