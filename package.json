@@ -1,6 +1,6 @@
 {
   "name": "react-native-esim-manager",
-  "version": "0.0.3",
+  "version": "0.1.1",
   "description": "React Native package for eSIM detection and management",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -64,6 +64,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@react-native-community/cli": "latest",
     "@react-native-community/eslint-config": "^3.0.0",
     "@types/jest": "^28.1.2",
     "@types/react": "^18.2.0",
@@ -117,5 +118,10 @@
     "*.{json,md}": [
       "prettier --write"
     ]
+  },
+  "codegenConfig": {
+    "name": "EsimManagerSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
   }
 }
