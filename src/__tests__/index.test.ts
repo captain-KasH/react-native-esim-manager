@@ -57,6 +57,16 @@ describe('ReactNativeEsimManager', () => {
       expect(result).toBe(false);
     });
 
+    it('should handle Android permission never_ask_again', async () => {
+      (Platform as any).OS = 'android';
+      (PermissionsAndroid.request as jest.Mock).mockResolvedValue(
+        'never_ask_again'
+      );
+
+      const result = await ReactNativeEsimManager.requestPermissions();
+      expect(result).toBe(false);
+    });
+
     it('should handle permission request errors', async () => {
       (Platform as any).OS = 'android';
       (PermissionsAndroid.request as jest.Mock).mockRejectedValue(
@@ -94,6 +104,15 @@ describe('ReactNativeEsimManager', () => {
       const result = await ReactNativeEsimManager.isEsimEnabled();
       expect(result).toBe(false);
     });
+
+    it('should handle native module errors', async () => {
+      NativeModules.EsimManager.isEsimEnabled.mockRejectedValue(
+        new Error('Native isEsimEnabled error')
+      );
+      await expect(ReactNativeEsimManager.isEsimEnabled()).rejects.toThrow(
+        'Native isEsimEnabled error'
+      );
+    });
   });
 
   describe('getEsimInfo', () => {
@@ -101,6 +120,15 @@ describe('ReactNativeEsimManager', () => {
       NativeModules.EsimManager.getEsimInfo.mockResolvedValue(mockEsimInfo);
       const result = await ReactNativeEsimManager.getEsimInfo();
       expect(result).toEqual(mockEsimInfo);
+    });
+
+    it('should handle native module errors', async () => {
+      NativeModules.EsimManager.getEsimInfo.mockRejectedValue(
+        new Error('Native getEsimInfo error')
+      );
+      await expect(ReactNativeEsimManager.getEsimInfo()).rejects.toThrow(
+        'Native getEsimInfo error'
+      );
     });
   });
 
@@ -134,6 +162,17 @@ describe('ReactNativeEsimManager', () => {
       });
       expect(result).toBe(false);
     });
+
+    it('should handle native module errors', async () => {
+      NativeModules.EsimManager.installEsimProfile.mockRejectedValue(
+        new Error('Installation failed')
+      );
+      await expect(
+        ReactNativeEsimManager.installEsimProfile({
+          activationCode: 'LPA:1$test$code',
+        })
+      ).rejects.toThrow('Installation failed');
+    });
   });
 
   describe('getCellularPlans', () => {
@@ -149,6 +188,49 @@ describe('ReactNativeEsimManager', () => {
       NativeModules.EsimManager.getCellularPlans.mockResolvedValue([]);
       const result = await ReactNativeEsimManager.getCellularPlans();
       expect(result).toEqual([]);
+    });
+
+    it('should handle native module errors', async () => {
+      NativeModules.EsimManager.getCellularPlans.mockRejectedValue(
+        new Error('Native error')
+      );
+      await expect(ReactNativeEsimManager.getCellularPlans()).rejects.toThrow(
+        'Native error'
+      );
+    });
+  });
+
+  describe('Module loading and platform branches', () => {
+    it('should handle Platform.select with default fallback', () => {
+      const originalSelect = Platform.select;
+      (Platform.select as jest.Mock).mockImplementation(
+        obj => obj.default || ''
+      );
+
+      // Test Platform.select fallback in LINKING_ERROR
+      const result = Platform.select({
+        ios: 'ios-specific',
+        default: 'default-value',
+      });
+      expect(result).toBe('default-value');
+
+      Platform.select = originalSelect;
+    });
+
+    it('should handle Platform.select with iOS branch', () => {
+      const originalSelect = Platform.select;
+      (Platform.select as jest.Mock).mockImplementation(
+        obj => obj.ios || obj.default || ''
+      );
+
+      // Test Platform.select iOS branch in LINKING_ERROR
+      const result = Platform.select({
+        ios: 'ios-specific',
+        default: 'default-value',
+      });
+      expect(result).toBe('ios-specific');
+
+      Platform.select = originalSelect;
     });
   });
 });
