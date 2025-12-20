@@ -153,6 +153,63 @@ const App = () => {
     }
   };
 
+  const validateEsimSupport = async () => {
+    setButtonLoadingState('validate', true);
+    try {
+      // Step 1: Check basic support
+      const isSupported = await ReactNativeEsimManager.isEsimSupported();
+      
+      if (!isSupported) {
+        Alert.alert('eSIM Validation', '❌ Device does not support eSIM');
+        return;
+      }
+
+      // Step 2: Try to get actual eSIM info to verify real functionality
+      try {
+        const esimInfo = await ReactNativeEsimManager.getEsimInfo();
+        
+        // Step 3: Additional validation checks
+        const hasCarrierInfo = esimInfo.carrierName || esimInfo.mobileCountryCode;
+        const canAccessEsimFeatures = esimInfo.isEsimSupported && 
+          (esimInfo.isEsimEnabled || hasCarrierInfo);
+
+        let validationResult = '';
+        if (canAccessEsimFeatures) {
+          validationResult = '✅ Real eSIM support confirmed\n';
+          validationResult += `• Hardware: Supported\n`;
+          validationResult += `• Status: ${esimInfo.isEsimEnabled ? 'Active' : 'Available'}\n`;
+          if (hasCarrierInfo) {
+            validationResult += `• Carrier: ${esimInfo.carrierName || 'Available'}\n`;
+          }
+        } else {
+          validationResult = '⚠️ Possible false positive detected\n';
+          validationResult += `• API reports support: ${isSupported}\n`;
+          validationResult += `• Actual functionality: Limited\n`;
+          validationResult += `• Recommendation: Test with real activation code`;
+        }
+
+        Alert.alert('eSIM Validation Result', validationResult);
+      } catch (infoError) {
+        // If we can't get eSIM info, it's likely a false positive
+        Alert.alert(
+          'eSIM Validation Result',
+          `⚠️ Likely false positive detected\n\n` +
+          `• API reports support: ${isSupported}\n` +
+          `• Cannot access eSIM features\n` +
+          `• Error: ${infoError instanceof Error ? infoError.message : 'Unknown'}\n\n` +
+          `This device may have eSIM hardware but lacks software support.`
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        'Validation Error',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    } finally {
+      setButtonLoadingState('validate', false);
+    }
+  };
+
   const SkeletonLoader = () => (
     <View style={styles.skeletonContainer}>
       <View style={styles.skeletonTitle} />
@@ -236,6 +293,12 @@ const App = () => {
             title="Check Support"
             onPress={checkSupport}
             loadingKey="support"
+          />
+          <Button
+            title="Validate Real eSIM Support"
+            onPress={validateEsimSupport}
+            loadingKey="validate"
+            style={styles.validateButton}
           />
           <Button
             title="Check Enabled"
@@ -491,6 +554,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#007AFF',
     fontWeight: '500',
+  },
+  validateButton: {
+    backgroundColor: '#FF9500',
   },
 });
 
