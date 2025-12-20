@@ -61,7 +61,7 @@
   },
   "homepage": "https://github.com/captain-KasH/react-native-esim-manager#readme",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@react-native-community/cli": "latest",
