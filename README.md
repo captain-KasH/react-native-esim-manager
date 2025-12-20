@@ -7,6 +7,17 @@
 
 React Native package for eSIM detection and management on iOS and Android devices.
 
+## 📱 Demo
+
+### iOS eSIM Installation
+![iOS eSIM Demo](./assets/ios.gif)
+
+### Android eSIM Support Check
+![Android eSIM Supported](./assets/android-supports.gif)
+
+### Android eSIM Hardware Supported - Manufacturer Disabled  
+![Android eSIM Unsupported](./assets/android-usupport.gif)
+
 ## 📚 Documentation
 
 - **[API Reference](#api-reference)** - Complete method documentation
@@ -188,6 +199,28 @@ All methods return promises and may throw errors. Common error codes:
 - `INVALID_ACTIVATION_CODE` - Invalid or missing activation code
 - `INSTALLATION_FAILED` - eSIM installation failed
 - `INSTALLATION_CANCELLED` - User cancelled installation (iOS)
+
+## 🐛 Known Issues
+
+### Android eSIM Hardware vs Functionality
+
+Some Android devices may report eSIM hardware support (`isEsimSupported: true`) but still fail to install eSIM profiles due to:
+
+- **Carrier restrictions**: Some carriers disable eSIM functionality on certain device models
+- **Manufacturer limitations**: OEMs may disable eSIM features in specific regions or variants
+- **Firmware restrictions**: Device firmware may block eSIM installation despite hardware support
+
+If installation fails on a "supported" device, the library will fall back to opening system settings where users can attempt manual installation.
+
+### React Native 0.81.0 Compatibility
+
+If you encounter the error `react-refresh-runtime.development.js` not found, add the missing dependency:
+
+```bash
+npm install react-refresh@^0.14.0
+```
+
+This is a known issue with React Native 0.81.0 where the `react-refresh` package is not automatically included in the dependencies.
 
 ## 🛠️ Development
 
