@@ -1,6 +1,6 @@
 {
   "name": "react-native-esim-manager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Native package for eSIM detection and management",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
