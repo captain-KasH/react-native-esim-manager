@@ -33,4 +33,4 @@ export interface Spec extends TurboModule {
   getCellularPlans(): Promise<CellularPlan[]>;
 }
 
-export default TurboModuleRegistry.get<Spec>('EsimManager');
+export default TurboModuleRegistry.get<Spec>('EsimManagerSpec');

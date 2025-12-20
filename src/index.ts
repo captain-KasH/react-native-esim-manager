@@ -14,6 +14,7 @@ const LINKING_ERROR =
 const EsimManager =
   NativeEsimManager ||
   NativeModules.EsimManager ||
+  NativeModules.ReactNativeEsimManager ||
   new Proxy(
     {},
     {
