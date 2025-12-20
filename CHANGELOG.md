@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2024-12-20
+
+### Changed
+
+- 📝 **Documentation Improvements**
+  - Simplified README for better user experience
+  - Moved detailed development information to CONTRIBUTING.md
+  - Focused README on installation, usage, and API reference
+  - Improved documentation structure and readability
+
 ## [0.1.0] - 2024-12-20
 
 ### Added
