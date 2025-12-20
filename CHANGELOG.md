@@ -7,7 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2024-12-20
+
 ### Added
+
+- 🚀 **TurboModule Support & New Architecture**
+  - Full TurboModule implementation for React Native new architecture
+  - Codegen specifications for type-safe native module interfaces
+  - New architecture compatibility with React Native 0.70+
+  - Enhanced performance with direct JSI bindings
+
+- 📱 **Enhanced Example App**
+  - Updated example app for new architecture demonstration
+  - React Native 0.81.0 compatibility fixes
+  - Added react-refresh dependency for development
+
+- 🎬 **Demo Assets**
+  - iOS eSIM installation demo GIF
+  - Android eSIM support check demo GIF
+  - Android manufacturer disabled scenario demo GIF
 
 - 🧪 **Comprehensive Testing Suite**
   - Unit tests with 94%+ coverage (statements, functions, lines)
@@ -53,6 +71,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- 🔧 **Architecture Improvements**
+  - Migrated from legacy bridge to TurboModule architecture
+  - Removed deprecated Java module files
+  - Enhanced Android eSIM installation for new architecture
+
+- 📝 **Documentation Enhancements**
+  - Clarified Android eSIM hardware vs manufacturer disabled scenarios
+  - Added comprehensive known issues section
+  - Updated README with demo GIFs and troubleshooting guides
+
 - 📝 **Enhanced Documentation**
   - Updated README with badges, comprehensive API docs, and links to all documentation
   - Improved code examples with error handling
@@ -78,6 +106,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- 🔧 **New Architecture Compatibility**
+  - Fixed Android eSIM installation with new architecture
+  - Resolved React Native 0.81.0 compatibility issues
+  - Fixed react-refresh dependency for development
+  - Enhanced test coverage for TurboModule implementation
+
 - 🐛 **Development Issues**
   - Resolved dependency conflicts with React Native 0.80
   - Fixed Jest configuration for proper test execution
@@ -85,7 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved module mocking for React Native components
   - Cleaned up Android build artifacts from repository
 
-## [0.0.3] - 2024-01-XX
+## [0.0.3] - 2024-01-15
 
 ### Added
 
