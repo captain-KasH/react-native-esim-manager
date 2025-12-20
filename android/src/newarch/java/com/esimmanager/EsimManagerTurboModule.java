@@ -161,51 +161,84 @@ public class EsimManagerTurboModule extends NativeEsimManagerSpec {
     @Override
     public void installEsimProfile(ReadableMap data, Promise promise) {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                EuiccManager euiccManager = (EuiccManager) reactContext.getSystemService(Context.EUICC_SERVICE);
-                
-                if (euiccManager != null && euiccManager.isEnabled()) {
-                    String activationCode = data.getString("activationCode");
-                    
-                    if (activationCode != null && !activationCode.isEmpty()) {
-                        DownloadableSubscription subscription = DownloadableSubscription.forActivationCode(activationCode);
-                        
-                        Activity currentActivity = getCurrentActivity();
-                        if (currentActivity != null) {
-                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) reactContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            android.content.ClipData clip = android.content.ClipData.newPlainText("eSIM Activation Code", activationCode);
-                            clipboard.setPrimaryClip(clip);
-                            
-                            try {
-                                Intent intent = new Intent("android.telephony.euicc.action.PROVISION_EMBEDDED_SUBSCRIPTION");
-                                intent.putExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_DOWNLOADABLE_SUBSCRIPTION", subscription);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                currentActivity.startActivity(intent);
-                                promise.resolve(true);
-                            } catch (Exception e1) {
-                                try {
-                                    Intent intent = new Intent("android.settings.EUICC_SETTINGS");
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    currentActivity.startActivity(intent);
-                                    promise.resolve(true);
-                                } catch (Exception e2) {
-                                    promise.reject("SETTINGS_FAILED", "Could not open eSIM settings");
-                                }
-                            }
-                        } else {
-                            promise.reject("NO_ACTIVITY", "No current activity available");
-                        }
-                    } else {
-                        promise.reject("INVALID_ACTIVATION_CODE", "Activation code is required");
-                    }
-                } else {
-                    promise.reject("NOT_SUPPORTED", "eSIM is not supported or enabled on this device");
-                }
-            } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                 promise.reject("VERSION_NOT_SUPPORTED", "Android 9.0 (API 28) or higher is required");
+                return;
+            }
+
+            EuiccManager euiccManager = (EuiccManager) reactContext.getSystemService(Context.EUICC_SERVICE);
+            
+            if (euiccManager == null) {
+                promise.reject("NOT_SUPPORTED", "EuiccManager not available");
+                return;
+            }
+
+            if (!euiccManager.isEnabled()) {
+                promise.reject("NOT_SUPPORTED", "eSIM is not enabled on this device");
+                return;
+            }
+
+            String activationCode = data.getString("activationCode");
+            
+            if (activationCode == null || activationCode.isEmpty()) {
+                promise.reject("INVALID_ACTIVATION_CODE", "Activation code is required");
+                return;
+            }
+
+            Activity currentActivity = reactContext.getCurrentActivity();
+            if (currentActivity == null) {
+                promise.reject("NO_ACTIVITY", "No current activity available");
+                return;
+            }
+
+            // Copy activation code to clipboard
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) reactContext.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (clipboard != null) {
+                android.content.ClipData clip = android.content.ClipData.newPlainText("eSIM Activation Code", activationCode);
+                clipboard.setPrimaryClip(clip);
+            }
+            
+            // Try direct eSIM installation first
+            try {
+                DownloadableSubscription subscription = DownloadableSubscription.forActivationCode(activationCode);
+                Intent intent = new Intent("android.telephony.euicc.action.PROVISION_EMBEDDED_SUBSCRIPTION");
+                intent.putExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_DOWNLOADABLE_SUBSCRIPTION", subscription);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                currentActivity.startActivity(intent);
+                promise.resolve(true);
+                return;
+            } catch (Exception e1) {
+                // Fallback to eSIM settings
+                try {
+                    Intent intent = new Intent("android.settings.EUICC_SETTINGS");
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    currentActivity.startActivity(intent);
+                    promise.resolve(true);
+                    return;
+                } catch (Exception e2) {
+                    // Fallback to SIM settings
+                    try {
+                        Intent intent = new Intent("android.settings.SIM_SETTINGS");
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        currentActivity.startActivity(intent);
+                        promise.resolve(true);
+                        return;
+                    } catch (Exception e3) {
+                        // Final fallback to wireless settings
+                        try {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            currentActivity.startActivity(intent);
+                            promise.resolve(true);
+                            return;
+                        } catch (Exception e4) {
+                            promise.reject("SETTINGS_FAILED", "Could not open any settings: " + e4.getMessage());
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
-            promise.reject("ERROR", e.getMessage());
+            promise.reject("ERROR", "Installation failed: " + e.getMessage());
         }
     }
 
