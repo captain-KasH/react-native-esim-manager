@@ -15,7 +15,7 @@ React Native package for eSIM detection and management on iOS and Android device
 ### Android eSIM Support Check
 ![Android eSIM Supported](./assets/android-supports.gif)
 
-### Android eSIM Not Supported  
+### Android eSIM Hardware Supported - Manufacturer Disabled  
 ![Android eSIM Unsupported](./assets/android-usupport.gif)
 
 ## 📚 Documentation
