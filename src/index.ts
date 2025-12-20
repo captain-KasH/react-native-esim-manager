@@ -1,4 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
+import NativeEsimManager from './NativeEsimManager';
 
 const LINKING_ERROR =
   `The package 'react-native-esim-manager' doesn't seem to be linked. Make sure: \n\n` +
@@ -9,16 +10,19 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const EsimManager = NativeModules.EsimManager
-  ? NativeModules.EsimManager
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+// Use TurboModule if available, fallback to legacy bridge
+const EsimManager =
+  NativeEsimManager ||
+  NativeModules.EsimManager ||
+  NativeModules.ReactNativeEsimManager ||
+  new Proxy(
+    {},
+    {
+      get() {
+        throw new Error(LINKING_ERROR);
+      },
+    }
+  );
 
 export interface EsimInfo {
   isEsimSupported: boolean;
