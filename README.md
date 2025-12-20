@@ -7,6 +7,17 @@
 
 React Native package for eSIM detection and management on iOS and Android devices.
 
+## 📱 Demo
+
+### iOS eSIM Installation
+![iOS eSIM Demo](./assets/ios.gif)
+
+### Android eSIM Support Check
+![Android eSIM Supported](./assets/android-supports.gif)
+
+### Android eSIM Not Supported  
+![Android eSIM Unsupported](./assets/android-usupport.gif)
+
 ## 📚 Documentation
 
 - **[API Reference](#api-reference)** - Complete method documentation
@@ -190,6 +201,16 @@ All methods return promises and may throw errors. Common error codes:
 - `INSTALLATION_CANCELLED` - User cancelled installation (iOS)
 
 ## 🐛 Known Issues
+
+### Android eSIM Hardware vs Functionality
+
+Some Android devices may report eSIM hardware support (`isEsimSupported: true`) but still fail to install eSIM profiles due to:
+
+- **Carrier restrictions**: Some carriers disable eSIM functionality on certain device models
+- **Manufacturer limitations**: OEMs may disable eSIM features in specific regions or variants
+- **Firmware restrictions**: Device firmware may block eSIM installation despite hardware support
+
+If installation fails on a "supported" device, the library will fall back to opening system settings where users can attempt manual installation.
 
 ### React Native 0.81.0 Compatibility
 
