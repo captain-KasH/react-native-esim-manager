@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing! This guide will help you get started with our comprehensive development workflow.
 
-## 🚀 Quick Start
+## Quick Start
 
 1. **Fork and clone the repository**
    ```bash
@@ -25,7 +25,7 @@ Thank you for your interest in contributing! This guide will help you get starte
    npm run validate
    ```
 
-## 🛠️ Development Workflow
+## Development Workflow
 
 ### Available Scripts
 
@@ -70,7 +70,7 @@ Husky automatically runs validation before commits:
 - Code formatting
 - Unit tests
 
-## 🧪 Testing Guidelines
+## Testing Guidelines
 
 ### Writing Tests
 
@@ -99,7 +99,7 @@ describe('FeatureName', () => {
 });
 ```
 
-## 📝 Code Style Guidelines
+## Code Style Guidelines
 
 ### TypeScript
 
@@ -115,7 +115,7 @@ describe('FeatureName', () => {
 - Use proper error handling
 - Test on both iOS and Android
 
-## 🔄 Git Workflow (GitFlow)
+## Git Workflow (GitFlow)
 
 ### Branch Strategy
 
@@ -153,7 +153,7 @@ describe('FeatureName', () => {
    # Create PR via GitHub UI
    ```
 
-## 📋 Pull Request Process
+## Pull Request Process
 
 ### Before Submitting
 
@@ -163,7 +163,7 @@ describe('FeatureName', () => {
 - [ ] Follow conventional commit format
 - [ ] Ensure CI passes
 
-## 🏷️ Commit Message Format
+## Commit Message Format
 
 Follow [Conventional Commits](https://conventionalcommits.org/):
 
@@ -195,7 +195,7 @@ docs: update API documentation
 test: add unit tests for error handling
 ```
 
-## 📱 Platform-Specific Guidelines
+## Platform-Specific Guidelines
 
 ### iOS Development
 
@@ -211,7 +211,7 @@ test: add unit tests for error handling
 - **Permissions**: Handle READ_PHONE_STATE properly
 - **Testing**: Use Android Emulator and physical devices
 
-## 🚀 Release Process
+## Release Process
 
 ### Automated Releases
 
@@ -237,7 +237,7 @@ test: add unit tests for error handling
 
 4. **GitHub Actions handles NPM publishing**
 
-## 🔧 Local Development Tools
+## Local Development Tools
 
 ### GitHub Actions Locally (Act)
 
@@ -262,7 +262,7 @@ npm run test:coverage
 npm run prepack
 ```
 
-## 🐛 Debugging
+## Debugging
 
 ### Common Issues
 
@@ -277,7 +277,7 @@ npm run prepack
 - **Discussions**: GitHub Discussions for questions
 - **Security**: Follow security policy for vulnerabilities
 
-## 📚 Resources
+## Resources
 
 - [React Native Documentation](https://reactnative.dev/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
@@ -287,4 +287,4 @@ npm run prepack
 
 ---
 
-**Thank you for contributing to react-native-esim-manager! 🙏**
+**Thank you for contributing to react-native-esim-manager!**
