@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2024-12-21
+
+### Fixed
+
+- **ESLint v9 Migration**
+  - Migrated from deprecated .eslintrc.js to eslint.config.js format
+  - Fixed ESLint configuration for React Native and Jest compatibility
+  - Removed invalid --ignore-path option from lint commands
+  - Added proper globals for Jest and Node.js environments
+
+- **CI/CD Improvements**
+  - Updated Node.js requirement to >= 20.0.0 for all workflows
+  - Fixed ERR_REQUIRE_ESM errors in build pipeline
+  - Resolved dependency compatibility issues with arktype and @octokit packages
+
+- **Documentation**
+  - Removed emoji icons from README.md and CONTRIBUTING.md for professional appearance
+  - Maintained content structure while improving readability
+
+### Changed
+
+- **Development Environment**
+  - Updated ESLint to v9.39.2 with flat config format
+  - Enhanced test coverage with comprehensive error handling tests
+  - Improved local CI pipeline reliability
+
 ## [0.1.1] - 2024-12-20
 
 ### Changed
