@@ -7,7 +7,7 @@
 
 React Native package for eSIM detection and management on iOS and Android devices.
 
-## 📱 Demo
+## Demo
 
 ### iOS eSIM Installation
 ![iOS eSIM Demo](./assets/ios.gif)
@@ -18,7 +18,7 @@ React Native package for eSIM detection and management on iOS and Android device
 ### Android eSIM Hardware Supported - Manufacturer Disabled  
 ![Android eSIM Unsupported](./assets/android-usupport.gif)
 
-## 📚 Documentation
+## Documentation
 
 - **[API Reference](#api-reference)** - Complete method documentation
 - **[Contributing Guide](CONTRIBUTING.md)** - Development workflow and guidelines
@@ -28,7 +28,7 @@ React Native package for eSIM detection and management on iOS and Android device
 - **[Changelog](CHANGELOG.md)** - Version history and changes
 - **[Branch Strategy](.github/branch-strategy.md)** - Git workflow and branching model
 
-## 🚀 Installation
+## Installation
 
 ```sh
 npm install react-native-esim-manager
@@ -46,12 +46,12 @@ Add the following permission to your `android/app/src/main/AndroidManifest.xml`:
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 ```
 
-## 🔧 Platform Support
+## Platform Support
 
 - **iOS**: 12.0+ (eSIM installation supported)
 - **Android**: API 28+ (Android 9.0+, opens system settings for eSIM management)
 
-## 📖 API Reference
+## API Reference
 
 ### Methods
 
@@ -144,7 +144,7 @@ interface CellularPlan {
 }
 ```
 
-## 💡 Usage Example
+## Usage Example
 
 ```js
 import ReactNativeEsimManager from 'react-native-esim-manager';
@@ -190,7 +190,7 @@ plans.forEach((plan, index) => {
 });
 ```
 
-## ⚠️ Error Handling
+## Error Handling
 
 All methods return promises and may throw errors. Common error codes:
 
@@ -200,7 +200,7 @@ All methods return promises and may throw errors. Common error codes:
 - `INSTALLATION_FAILED` - eSIM installation failed
 - `INSTALLATION_CANCELLED` - User cancelled installation (iOS)
 
-## 🐛 Known Issues
+## Known Issues
 
 ### Android eSIM Hardware vs Functionality
 
@@ -226,7 +226,7 @@ This is a known issue with React Native 0.81.0 where the `react-refresh` package
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for development setup and guidelines.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 

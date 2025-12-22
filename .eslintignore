@@ -1,7 +1,0 @@
-node_modules/
-lib/
-example/
-coverage/
-*.log
-.DS_Store
-jest.setup.js
