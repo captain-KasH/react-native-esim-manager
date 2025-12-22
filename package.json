@@ -67,7 +67,7 @@
     "@react-native-community/cli": "latest",
     "@react-native-community/eslint-config": "^3.0.0",
     "@types/jest": "^30.0.0",
-    "@types/react": "^18.2.0",
+    "@types/react": "^19.2.7",
     "@types/react-native": "^0.73.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
