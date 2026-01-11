@@ -63,6 +63,9 @@ android/build/
 android/.gradle/
 android/local.properties
 
+# Codegen files
+android/build/generated/
+
 # iOS specific
 example/ios/Pods/
 example/ios/.xcode.env.local
