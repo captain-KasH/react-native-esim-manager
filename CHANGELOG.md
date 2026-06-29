@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-06-29
+
+### Fixed
+
+- **React Native 0.84 / New Architecture compatibility** ([#36](https://github.com/captain-KasH/react-native-esim-manager/issues/36))
+  - Resolved `Unable to find a specification for RCT-Folly depended upon by react-native-esim-manager` error during `pod install`
+  - Replaced hard-coded New Architecture pod dependencies (`RCT-Folly`, `React-Codegen`, `RCTRequired`, `RCTTypeSafety`, `ReactCommon`, `React-NativeModulesApple`) with React Native's `install_modules_dependencies` helper, which wires up the correct old/new-architecture dependencies automatically (RN 0.71+), with a legacy fallback for older versions
+  - Raised the minimum iOS deployment target from `10.0` to `min_ios_version_supported`
+  - Fixed malformed `packageManager` field in `package.json`
+
+### Changed
+
+- Bumped `react-native` dev dependency to `0.84.1`
+- Upgraded the example app to the React Native `0.84.1` ecosystem
+
 ## [0.1.2] - 2025-12-21
 
 ### Fixed
